@@ -1,0 +1,26 @@
+<!-- templates/index.html -->
+<html>
+<head>
+    <title>Phishing Email Checker</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: black;
+            color: white;
+            font-family: 'Arial', sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto py-8">
+        <h2 class="text-2xl font-bold mb-4">Masukkan konten email:</h2>
+        <form action="/" method="post">
+            <textarea name="email_content" rows="10" cols="80" class="border rounded-lg p-2 w-full text-black"></textarea><br><br>
+            <input type="submit" value="Periksa Email" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        </form>
+        {% if result is not none %}
+            <p class="mt-4">{% if result %}Email ini mungkin phishing.{% else %}Email ini mungkin bukan phishing.{% endif %}</p>
+        {% endif %}
+    </div>
+</body>
+</html>
