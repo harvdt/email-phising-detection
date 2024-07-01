@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, request
 import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -8,8 +7,7 @@ import requests
 
 app = Flask(__name__)
 
-# Load data
-df = pd.read_csv('mail_data - mail_data.csv')
+df = pd.read_csv('dataset/mail_data - mail_data.csv')
 
 X = df['Message']
 y = df['Category']
@@ -23,9 +21,8 @@ X = vectorizer.fit_transform(X)
 model = MultinomialNB()
 model.fit(X, y)
 
-# Function to check URL using VirusTotal
 def check_url(url):
-    api_key = '6880ee59475a60b84c6b7fa032f05d50fd5710fd2015dac25bc3c77fc9c91378'
+    api_key = 'YOUR_VIRUSTOTAL_API_KEY'
     params = {'apikey': api_key, 'resource': url}
     try:
         response = requests.get('https://www.virustotal.com/vtapi/v2/url/report', params=params)
@@ -36,14 +33,11 @@ def check_url(url):
         print(f"Error checking URL: {e}")
     return False
 
-# Function to analyze email
 def analyze_email(email_content):
-    # Predict using model
     content_features = vectorizer.transform([email_content])
     prediction = model.predict(content_features)[0]
 
-    # Check URLs in email content
-    urls = re.findall(r'(https?://\S+)', email_content)
+    urls = re.findall(r'https?://\S+|http://\S+|\S+\.com', email_content)
     for url in urls:
         if check_url(url):
             return True
@@ -53,10 +47,15 @@ def analyze_email(email_content):
 @app.route('/', methods=['GET', 'POST'])
 def index():
     result = None
+    email_content = None
     if request.method == 'POST':
         email_content = request.form['email_content']
         result = analyze_email(email_content)
-    return render_template('index.html', result=result)
+    return render_template('index.html', result=result, email_content=email_content)
+
+@app.route('/about', methods=['GET'])
+def about():
+    return render_template('about.html')
 
 if __name__ == '__main__':
     app.run(debug=True)

@@ -1,7 +1,9 @@
-<!-- templates/index.html -->
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Phishing Email Checker</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Email Detector</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <style>
         body {
@@ -9,17 +11,33 @@
             color: white;
             font-family: 'Arial', sans-serif;
         }
+
+        .navbar{
+            background-color: midnightblue;
+        }
     </style>
 </head>
 <body>
+    <div class="navbar p-4 flex justify-between items-center">
+        <h1 class="text-white text-2xl font-bold">Kelompok Berapa Kita?</h1>
+        <div class="flex space-x-4">
+            <a href="/" class="text-white hover:text-gray-300">Home</a>
+            <a href="/about" class="text-white hover:text-gray-300">About</a>
+        </div>
+    </div>
     <div class="container mx-auto py-8">
         <h2 class="text-2xl font-bold mb-4">Masukkan konten email:</h2>
         <form action="/" method="post">
-            <textarea name="email_content" rows="10" cols="80" class="border rounded-lg p-2 w-full text-black"></textarea><br><br>
+            <textarea name="email_content" rows="10" class="border rounded-lg p-2 w-full text-black"></textarea><br><br>
             <input type="submit" value="Periksa Email" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
         </form>
+        {% if email_content %}
+            <div class="mt-4">
+                <p class="text-xl font-semibold">Konten email: {{ email_content }}</p>
+            </div>
+        {% endif %}
         {% if result is not none %}
-            <p class="mt-4">{% if result %}Email ini mungkin phishing.{% else %}Email ini mungkin bukan phishing.{% endif %}</p>
+            <p class="mt-4 text-xl font-semibold">{% if result %}Email ini terindikasi phishing{% else %}Email ini tidak terindikasi phishing{% endif %}</p>
         {% endif %}
     </div>
 </body>
